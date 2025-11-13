@@ -1,0 +1,27 @@
+# DNALang Quantum Programming Framework - Dependencies
+
+# Core Python Libraries
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+pydantic>=2.0.0
+
+# NLP & AI
+transformers>=4.35.0
+torch>=2.0.0
+
+# Quantum Computing (Qiskit ecosystem)
+qiskit>=1.0.0
+qiskit-aer>=0.13.0
+qiskit-algorithms>=0.3.0
+
+# Web Framework (for API service)
+fastapi>=0.104.0
+uvicorn>=0.24.0
+
+# Optional: Performance and utilities
+numpy>=1.24.0
+scipy>=1.11.0
+
+# Development & Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
