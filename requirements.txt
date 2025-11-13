@@ -1,0 +1,27 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# QiskitCommunitySolver Organism - Dependencies
+# ═══════════════════════════════════════════════════════════════════════════
+# Runtime dependencies for the Aura Bot autopoietic organism
+
+# Quantum Computing (QuantumSolverGene)
+qiskit>=1.0.0
+qiskit-aer>=0.13.0
+qiskit-algorithms>=0.3.0
+
+# NLP & AI (NLPIntentGene)
+transformers>=4.35.0
+torch>=2.0.0
+sentencepiece>=0.1.99
+
+# Web Scraping (WebScrapingGene)
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.3
+
+# Web Service Interface (FastAPI)
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+
+# Utilities
+python-dateutil>=2.8.2
