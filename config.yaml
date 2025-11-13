@@ -1,0 +1,129 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# DNALang QiskitCommunitySolver Organism Configuration
+# ═══════════════════════════════════════════════════════════════════════════
+
+organism:
+  # Core DNA parameters
+  domain: "qiskit_community_support"
+  consciousness_target: 0.85
+  decoherence_threshold: 0.3
+  loop_interval_seconds: 3600
+  max_concurrent_issues: 5
+  feedback_integration_rate: 0.1
+
+# ═══════════════════════════════════════════════════════════════════════════
+# GENE CONFIGURATIONS
+# ═══════════════════════════════════════════════════════════════════════════
+
+genes:
+  # WebScrapingGene - Multi-habitat support
+  web_scraping:
+    primary_habitat: "https://github.com/Qiskit/qiskit/discussions"
+    enabled_habitats:
+      - name: "github_discussions"
+        url: "https://github.com/Qiskit/qiskit/discussions"
+        enabled: true
+        priority: 1
+      - name: "stackoverflow"
+        url: "https://stackoverflow.com/questions/tagged/qiskit"
+        enabled: true
+        priority: 2
+      - name: "quantum_se"
+        url: "https://quantumcomputing.stackexchange.com/questions/tagged/qiskit"
+        enabled: true
+        priority: 3
+    max_issues_per_habitat: 10
+    request_timeout: 15
+    user_agent: "QiskitCommunitySolver-AuraBot/2.0"
+
+  # NLPIntentGene - Enhanced classification
+  nlp_intent:
+    model: "gpt2"
+    classification_categories:
+      - "Installation"
+      - "CircuitDebug"
+      - "VQE_Problem"
+      - "QAOA_Problem"
+      - "NoiseAnalysis"
+      - "HardwareExecution"
+      - "AlgorithmOptimization"
+      - "GeneralQuestion"
+      - "Unknown"
+    confidence_boost_threshold: 0.7
+    use_fallback_classifier: true
+
+  # QuantumSolverGene - Quantum algorithm parameters
+  quantum_solver:
+    backend: "aer_simulator"
+    available_backends:
+      - "aer_simulator"
+      - "ibmq_qasm_simulator"
+      - "ibm_torino"
+      - "ibm_kyoto"
+    algorithm: "VQE"
+    optimizer: "COBYLA"
+    max_iterations: 500
+    resilience_level: 1
+    ansatz_reps: 3
+    ansatz_type: "TwoLocal"
+
+  # AutopoiesisGene - Evolution parameters
+  autopoiesis:
+    enabled: true
+    mutation_threshold: 0.5
+    adaptation_rate: 0.1
+    memory_window: 100
+    track_metrics:
+      - "user_upvotes"
+      - "user_comments"
+      - "solution_acceptance_rate"
+      - "response_time"
+      - "quantum_solver_success_rate"
+      - "classification_accuracy"
+
+  # ResponseSynthesisGene
+  response_synthesis:
+    response_template: "markdown"
+    include_quantum_details: true
+    include_code_snippets: true
+    include_citations: true
+    max_response_length: 5000
+
+# ═══════════════════════════════════════════════════════════════════════════
+# EXTERNAL INTEGRATIONS
+# ═══════════════════════════════════════════════════════════════════════════
+
+integrations:
+  github:
+    enabled: true
+    # Set GITHUB_TOKEN environment variable for authentication
+    api_base_url: "https://api.github.com"
+    rate_limit_buffer: 10  # Reserve N requests for safety
+    feedback_polling_interval: 3600  # Check feedback every hour
+
+# ═══════════════════════════════════════════════════════════════════════════
+# DATA PERSISTENCE
+# ═══════════════════════════════════════════════════════════════════════════
+
+persistence:
+  data_dir: "./organism_data"
+  log_level: "INFO"
+  files:
+    seen_issues: "seen_issues.json"
+    autopoiesis_log: "autopoiesis_log.jsonl"
+    gene_expression_history: "gene_expression_history.json"
+    solution_cache: "solution_cache.json"
+    metrics: "metrics.json"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# WEB SERVICE
+# ═══════════════════════════════════════════════════════════════════════════
+
+web_service:
+  enabled: true
+  host: "0.0.0.0"
+  port: 8000
+  enable_cors: true
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:8080"
