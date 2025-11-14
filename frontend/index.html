@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧬 Qiskit Aura Bot - Quantum Problem Solver</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+        }
+
+        .tagline {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px;
+        }
+
+        .input-section {
+            margin: 30px 0;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .loading {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .response-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .response-header h2 {
+            color: #333;
+        }
+
+        .copy-btn {
+            padding: 8px 15px;
+            font-size: 0.9em;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .classification {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .classification-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .classification-item:last-child {
+            border-bottom: none;
+        }
+
+        .classification-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .classification-value {
+            color: #333;
+        }
+
+        .intent-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .intent-vqe { background: #e3f2fd; color: #1976d2; }
+        .intent-qaoa { background: #f3e5f5; color: #7b1fa2; }
+        .intent-installation { background: #fff3e0; color: #f57c00; }
+        .intent-debug { background: #ffebee; color: #c62828; }
+        .intent-general { background: #e8f5e9; color: #388e3c; }
+
+        .solution-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        code {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .quantum-result {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .quantum-result h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .metric-value {
+            font-family: 'Monaco', monospace;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .examples {
+            margin: 20px 0;
+        }
+
+        .example-btn {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 15px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .example-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .response-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span class="emoji">🧬</span> Qiskit Aura Bot</h1>
+            <p class="tagline">Quantum-powered problem solving for the Qiskit community</p>
+            <div>
+                <span class="badge">Autopoietic</span>
+                <span class="badge">Φ = 0.92</span>
+                <span class="badge">Generation 0</span>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <label for="problem">Describe your Qiskit problem:</label>
+            <textarea
+                id="problem"
+                rows="6"
+                placeholder="Example: How do I find the ground state energy of a 2-qubit Ising model using VQE? I want to use the ZZ coupling term with coefficient 1.0 and local Z terms with coefficient -0.5."
+            ></textarea>
+
+            <div class="examples">
+                <strong>Try these examples:</strong><br>
+                <span class="example-btn" onclick="setExample(0)">VQE Ground State</span>
+                <span class="example-btn" onclick="setExample(1)">QAOA Max-Cut</span>
+                <span class="example-btn" onclick="setExample(2)">Circuit Debugging</span>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" onclick="solveProblem()" id="solveBtn">
+                    <span class="emoji">🌌</span> Solve with Quantum
+                </button>
+                <button class="btn-secondary" onclick="clearAll()">
+                    Clear
+                </button>
+            </div>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Organism is evolving a solution...</p>
+        </div>
+
+        <div id="response" class="response-section" style="display: none;">
+            <div class="response-header">
+                <h2>Solution</h2>
+                <button class="copy-btn" onclick="copyToClipboard()">📋 Copy</button>
+            </div>
+
+            <div class="classification">
+                <div class="classification-item">
+                    <span class="classification-label">Intent:</span>
+                    <span id="intent"></span>
+                </div>
+                <div class="classification-item">
+                    <span class="classification-label">Confidence:</span>
+                    <span id="confidence" class="classification-value"></span>
+                </div>
+                <div class="classification-item">
+                    <span class="classification-label">Generation:</span>
+                    <span id="generation" class="classification-value"></span>
+                </div>
+            </div>
+
+            <div id="solution" class="solution-content"></div>
+
+            <div id="quantumResult" class="quantum-result" style="display: none;">
+                <h3>🌌 Quantum Results</h3>
+                <div class="metric">
+                    <span class="metric-label">Ground State Energy:</span>
+                    <span class="metric-value" id="eigenvalue">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Optimization Time:</span>
+                    <span class="metric-value" id="optTime">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Algorithm:</span>
+                    <span class="metric-value" id="algorithm">-</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Powered by <a href="https://github.com/ENKI-420/dnalang_complete_quantum_programming_framework" target="_blank">DNALang Framework</a>
+            <br>
+            An autopoietic organism for quantum computing
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+
+        const examples = [
+            "How do I find the ground state energy of a 2-qubit Ising model using VQE? I want to use the ZZ coupling term with coefficient 1.0 and local Z terms with coefficient -0.5.",
+            "I need to solve a Max-Cut problem on a 4-node graph using QAOA. The edges are (0,1), (1,2), (2,3), (3,0). Can you help me set up the Hamiltonian?",
+            "My Qiskit circuit is giving me an error: 'CircuitError: Cannot append gate to circuit'. How do I debug this?"
+        ];
+
+        function setExample(index) {
+            document.getElementById('problem').value = examples[index];
+        }
+
+        async function solveProblem() {
+            const problem = document.getElementById('problem').value.trim();
+
+            if (!problem) {
+                alert('Please describe your problem first!');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('response').style.display = 'none';
+            document.getElementById('solveBtn').disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/solve/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ issue: problem })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displaySolution(data);
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Error: ${error.message}\n\nMake sure the Aura Bot server is running on ${API_URL}`);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('solveBtn').disabled = false;
+            }
+        }
+
+        function displaySolution(data) {
+            // Show response section
+            document.getElementById('response').style.display = 'block';
+
+            // Set classification
+            const intentClass = data.classification.intent.toLowerCase().replace('_', '-');
+            document.getElementById('intent').innerHTML =
+                `<span class="intent-badge intent-${intentClass}">${data.classification.intent}</span>`;
+            document.getElementById('confidence').textContent =
+                (data.classification.confidence * 100).toFixed(1) + '%';
+            document.getElementById('generation').textContent = data.generation;
+
+            // Set solution (convert markdown to HTML - simplified)
+            const solutionHtml = formatMarkdown(data.solution);
+            document.getElementById('solution').innerHTML = solutionHtml;
+
+            // Set quantum results if available
+            if (data.quantum_result && data.quantum_result.success) {
+                document.getElementById('quantumResult').style.display = 'block';
+                document.getElementById('eigenvalue').textContent =
+                    data.quantum_result.eigenvalue.toFixed(6);
+                document.getElementById('optTime').textContent =
+                    data.quantum_result.optimizer_time.toFixed(2) + 's';
+                document.getElementById('algorithm').textContent =
+                    data.quantum_result.algorithm;
+            } else {
+                document.getElementById('quantumResult').style.display = 'none';
+            }
+
+            // Scroll to response
+            document.getElementById('response').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function formatMarkdown(text) {
+            // Very simplified markdown to HTML conversion
+            // In production, use a proper markdown library like marked.js
+
+            text = text.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+            text = text.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+            text = text.replace(/```python\n([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+            text = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+
+            text = text.replace(/\n/g, '<br>');
+
+            return text;
+        }
+
+        function copyToClipboard() {
+            const solution = document.getElementById('solution').innerText;
+            navigator.clipboard.writeText(solution).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy';
+                }, 2000);
+            });
+        }
+
+        function clearAll() {
+            document.getElementById('problem').value = '';
+            document.getElementById('response').style.display = 'none';
+        }
+
+        // Allow Enter+Shift to submit
+        document.getElementById('problem').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.shiftKey) {
+                e.preventDefault();
+                solveProblem();
+            }
+        });
+    </script>
+</body>
+</html>

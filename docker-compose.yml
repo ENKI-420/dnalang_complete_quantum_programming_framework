@@ -1,0 +1,89 @@
+version: '3.8'
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Docker Compose for QiskitCommunitySolver Organism
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Usage:
+#   docker-compose up -d           # Start services
+#   docker-compose logs -f aurabot # View logs
+#   docker-compose down            # Stop services
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+services:
+  # ───────────────────────────────────────────────────────────────────────
+  # Main organism service
+  # ───────────────────────────────────────────────────────────────────────
+  aurabot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: qiskit-aurabot
+    ports:
+      - "8000:8000"
+    environment:
+      # API Keys (set these in .env file)
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - IBM_QUANTUM_TOKEN=${IBM_QUANTUM_TOKEN:-}
+
+      # Organism configuration
+      - ORGANISM_LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - ORGANISM_LOOP_INTERVAL=${LOOP_INTERVAL:-3600}
+      - ORGANISM_PORT=8000
+
+      # Python configuration
+      - PYTHONUNBUFFERED=1
+      - TRANSFORMERS_CACHE=/app/models_cache
+    volumes:
+      # Persist organism data (state, logs, cache)
+      - ./organism_data:/app/organism_data
+      - ./models_cache:/app/models_cache
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - aurabot-network
+
+  # ───────────────────────────────────────────────────────────────────────
+  # Frontend web interface (optional)
+  # ───────────────────────────────────────────────────────────────────────
+  frontend:
+    image: nginx:alpine
+    container_name: aurabot-frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - aurabot
+    restart: unless-stopped
+    networks:
+      - aurabot-network
+
+  # ───────────────────────────────────────────────────────────────────────
+  # Optional: Monitoring with Prometheus (for production)
+  # ───────────────────────────────────────────────────────────────────────
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: aurabot-prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  #     - prometheus-data:/prometheus
+  #   restart: unless-stopped
+  #   networks:
+  #     - aurabot-network
+
+networks:
+  aurabot-network:
+    driver: bridge
+
+volumes:
+  prometheus-data:
