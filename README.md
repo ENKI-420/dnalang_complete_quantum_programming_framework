@@ -1,4 +1,5 @@
-# 🧬 DNALang: Quantum Programming Framework
+      dna::}{::lang
+Quantum Programming Framework
 
 **A living, autopoietic programming paradigm for quantum computing**
 
@@ -10,7 +11,7 @@
 
 ## Overview
 
-DNALang is a revolutionary programming paradigm that treats software as **living organisms**. Programs are no longer static instructions—they are autopoietic (self-healing, self-evolving) entities that adapt to their environment through genetic mutations and natural selection.
+      dna::}{::lang is a programming paradigm that treats software as **living organisms**. Programs are no longer static instructions—they are autopoietic (self-healing, self-evolving) entities that adapt to their environment through genetic mutations and natural selection.
 
 ### Key Concepts
 
